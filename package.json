@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "bun run --hot index.ts",
-    "build": "bun build index.ts --outdir ./dist --target bun",
+    "build": "npx convex dev --once && bun build index.ts --outdir ./dist --target bun",
     "start": "bun run build && bun run dist/index.js",
     "test:db": "bun run scripts/test-db.ts",
     "convex:dev": "convex dev",
