@@ -9,17 +9,22 @@ This is the backend server for Signalist, built with Bun and TypeScript.
 bun install
 ```
 
-2. Set up environment variables:
+2. Set up Convex:
+```bash
+npx convex dev
+```
+
+3. Set up environment variables:
 Copy `.env.example` to `.env` and configure:
 ```
-DATABASE_URL=your_mongodb_connection_string
+CONVEX_URL=your_convex_deployment_url
 BETTER_AUTH_SECRET=your_auth_secret
 INNGEST_EVENT_KEY=your_inngest_key
 FINNHUB_API_KEY=your_finnhub_api_key
 RESEND_API_KEY=your_resend_api_key
 ```
 
-3. Run the development server:
+4. Run the development server:
 ```bash
 bun run dev
 ```
@@ -29,7 +34,7 @@ The server will be available at [http://localhost:3001](http://localhost:3001).
 ## Features
 
 - User authentication with Better Auth
-- MongoDB database integration
+- Convex database integration
 - Background job processing with Inngest
 - Email services with Resend/Nodemailer
 - Stock data integration with Finnhub API
@@ -39,7 +44,7 @@ The server will be available at [http://localhost:3001](http://localhost:3001).
 
 - Bun runtime
 - TypeScript
-- MongoDB with Mongoose
+- Convex for database and real-time features
 - Better Auth for authentication
 - Inngest for background jobs
 - Resend for email services
@@ -57,6 +62,13 @@ The server will be available at [http://localhost:3001](http://localhost:3001).
 
 ## Database
 
-The server uses MongoDB for data persistence with the following models:
-- User (handled by Better Auth)
-- Watchlist items
+The server uses Convex for data persistence with the following schema:
+- Watchlist items with user associations
+- User data (handled by Better Auth)
+
+## Convex Functions
+
+- `watchlist.getByUserId` - Get all watchlist items for a user
+- `watchlist.getSymbolsByUserId` - Get watchlist symbols for a user
+- `watchlist.add` - Add item to watchlist
+- `watchlist.remove` - Remove item from watchlist

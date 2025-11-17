@@ -6,7 +6,7 @@ import { inngest } from "./lib/inngest/client";
 import { serve as inngestServe } from "inngest/hono";
 import { sendDailyNewsSummary, sendSignUpEmail } from "./lib/inngest/functions";
 import { searchStocks } from "./lib/actions/finnhub.actions";
-import { getWatchlistSymbolsByEmail } from "./lib/actions/watchlist.actions";
+import { getWatchlistSymbolsByEmail, addToWatchlist, removeFromWatchlist } from "./lib/actions/watchlist.actions";
 
 const app = new Hono();
 
@@ -49,7 +49,7 @@ app.get("/api/stocks/search", async (c) => {
   }
 });
 
-// Watchlist API
+// Watchlist APIs
 app.get("/api/watchlist/:userId", async (c) => {
   try {
     const userId = c.req.param("userId");
@@ -57,6 +57,27 @@ app.get("/api/watchlist/:userId", async (c) => {
     return c.json(symbols);
   } catch (error) {
     return c.json({ error: "Failed to get watchlist" }, 500);
+  }
+});
+
+app.post("/api/watchlist", async (c) => {
+  try {
+    const { userId, symbol, company } = await c.req.json();
+    await addToWatchlist(userId, symbol, company);
+    return c.json({ success: true });
+  } catch (error) {
+    return c.json({ error: "Failed to add to watchlist" }, 500);
+  }
+});
+
+app.delete("/api/watchlist/:userId/:symbol", async (c) => {
+  try {
+    const userId = c.req.param("userId");
+    const symbol = c.req.param("symbol");
+    await removeFromWatchlist(userId, symbol);
+    return c.json({ success: true });
+  } catch (error) {
+    return c.json({ error: "Failed to remove from watchlist" }, 500);
   }
 });
 
